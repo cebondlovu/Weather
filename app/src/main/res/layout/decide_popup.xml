@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="360dp"
+    android:padding="10dp"
+    android:background="@drawable/locations_border"
+    android:layout_height="wrap_content">
+    <ImageView
+        android:id="@+id/imageView3"
+        android:layout_width="60dp"
+        android:layout_height="60dp"
+        android:layout_marginTop="24dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:srcCompat="@drawable/ic_baseline_location_on_24" />
+
+    <TextView
+        android:id="@+id/txt_msg_dg"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:text="Do You Bluh Bluh"
+        android:textAlignment="center"
+        android:textColor="@color/colorSubText"
+        android:textSize="16sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/imageView3" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:weightSum="100"
+        android:layout_marginTop="16dp"
+        app:layout_constraintTop_toBottomOf="@+id/txt_msg_dg"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent">
+        <Button
+            android:id="@+id/btn_no_dg"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="16dp"
+            android:layout_marginEnd="2dp"
+            android:textColor="@color/white"
+            android:layout_marginBottom="8dp"
+            android:textSize="18sp"
+            android:background="@drawable/red_button"
+            android:layout_weight="50"
+            android:text="No" />
+
+        <Button
+            android:id="@+id/btn_yes_dg"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:layout_marginEnd="8dp"
+            android:layout_marginStart="2dp"
+            android:layout_weight="50"
+            android:textColor="@color/white"
+            android:textSize="18sp"
+            android:background="@drawable/blue_button"
+            android:layout_marginBottom="8dp"
+            android:text="Yes" />
+    </LinearLayout>
+
+</androidx.constraintlayout.widget.ConstraintLayout>
