@@ -1,5 +1,6 @@
 package com.softcrypt.weather.views;
 
+import androidx.annotation.NonNull;
 import androidx.core.app.ActivityCompat;
 import androidx.fragment.app.FragmentActivity;
 
@@ -24,10 +25,10 @@ import com.google.android.gms.maps.model.CircleOptions;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.softcrypt.weather.R;
 import com.softcrypt.weather.base.BaseApplication;
 import com.softcrypt.weather.common.LocationsDatabaseHelper;
 import com.softcrypt.weather.models.ItemLocation;
-import com.softcrypt.weather.R;
 import com.softcrypt.weather.utils.ViewPopup;
 
 import java.util.ArrayList;
@@ -56,7 +57,6 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
         fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(this);
 
-        // Obtain the SupportMapFragment and get notified when the map is ready to be used.
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.map);
         assert mapFragment != null;
@@ -73,7 +73,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 myList = dbHelper.getAllUserLocations();
                 other_locations.add(
                         new LatLng(Double.parseDouble(myList.get(i).getLat()),
-                            Double.parseDouble(myList.get(i).getLng())));
+                                Double.parseDouble(myList.get(i).getLng())));
             }
         }
     }
@@ -89,22 +89,25 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         mMap.setOnMarkerDragListener(this);
 
         if (fusedLocationProviderClient != null)
-            if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-
+            if (ActivityCompat.checkSelfPermission(this,
+                    Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED
+                    && ActivityCompat.checkSelfPermission(this,
+                    Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
                 return;
             }
+
         assert fusedLocationProviderClient != null;
-        fusedLocationProviderClient.requestLocationUpdates(locationRequest, locationCallback,Looper.myLooper());
+        fusedLocationProviderClient.requestLocationUpdates(locationRequest, locationCallback, Looper.myLooper());
 
         //Adding Other Stored locations
         if(other_locations != null)
             for (LatLng latLng : other_locations){
                 //you can also use mMap.addMarker
                 mMap.addCircle(new CircleOptions().center(latLng)
-                .radius(50) //50m
-                    .strokeColor(Color.GREEN)
-                    .fillColor(0x220000FF) //transparent
-                    .strokeWidth(5.0f));
+                        .radius(50) //50m
+                        .strokeColor(Color.GREEN)
+                        .fillColor(0x220000FF) //transparent
+                        .strokeWidth(5.0f));
 
 
             }
@@ -127,7 +130,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     private void buildLocationCallBack() {
         locationCallback = new LocationCallback(){
             @Override
-            public void onLocationResult(LocationResult locationResult) {
+            public void onLocationResult(@NonNull LocationResult locationResult) {
                 super.onLocationResult(locationResult);
 
                 if(mMap != null){
@@ -135,37 +138,43 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                         currentUser.remove();
 
                     currentUser = mMap.addMarker(new MarkerOptions()
-                    .position(new LatLng(locationResult.getLastLocation().getLatitude(),
-                            locationResult.getLastLocation().getLongitude())).title("You").draggable(true));
+                            .position(new LatLng(locationResult.getLastLocation().getLatitude(),
+                                    locationResult.getLastLocation().getLongitude())).title("You").draggable(true));
 
+                    assert currentUser != null;
                     mMap.animateCamera(CameraUpdateFactory
-                    .newLatLngZoom(currentUser.getPosition(), 12.0f));
+                            .newLatLngZoom(currentUser.getPosition(), 12.0f));
                 }
             }
 
             @Override
-            public void onLocationAvailability(LocationAvailability locationAvailability) {
+            public void onLocationAvailability(@NonNull LocationAvailability locationAvailability) {
                 super.onLocationAvailability(locationAvailability);
             }
         };
     }
 
     @Override
-    public void onMarkerDragStart(Marker marker) {
+    public void onMarkerDragStart(@NonNull Marker marker) {
 
     }
 
     @Override
-    public void onMarkerDrag(Marker marker) {
+    public void onMarkerDrag(@NonNull Marker marker) {
 
     }
 
     @Override
-    public void onMarkerDragEnd(Marker marker) {
+    public void onMarkerDragEnd(@NonNull Marker marker) {
         if(dbHelper.getAllUserLocations().size() >= 4)
             Toast.makeText(this,"You Have Reached Limit of 4", Toast.LENGTH_LONG).show();
         else
             popup.confirmPopup(String.valueOf(marker.getPosition().longitude),
                     String.valueOf(marker.getPosition().latitude),this);
+    }
+
+    @Override
+    public void onPointerCaptureChanged(boolean hasCapture) {
+
     }
 }

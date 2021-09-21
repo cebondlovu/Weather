@@ -4,15 +4,15 @@
 
     To get one, follow this link, follow the directions and press "Create" at the end:
 
-    https://console.developers.google.com/flows/enableapi?apiid=maps_android_backend&keyType=CLIENT_SIDE_ANDROID&r=01:1B:A4:39:3A:50:E7:DD:AB:12:6D:67:49:7A:EF:1E:79:11:4B:59%3Bcom.softcrypt.weather
+    https://console.developers.google.com/flows/enableapi?apiid=maps_android_backend&keyType=CLIENT_SIDE_ANDROID&r=F5:AA:CF:0B:08:CD:94:85:49:7B:A9:F6:27:1F:FD:B2:49:57:46:1F%3Bcom.softcrypt.weather.views
 
     You can also add your credentials to an existing key, using these values:
 
     Package name:
-    com.softcrypt.weather
+    com.softcrypt.weather.views
 
     SHA-1 certificate fingerprint:
-    01:1B:A4:39:3A:50:E7:DD:AB:12:6D:67:49:7A:EF:1E:79:11:4B:59
+    F5:AA:CF:0B:08:CD:94:85:49:7B:A9:F6:27:1F:FD:B2:49:57:46:1F
 
     Alternatively, follow the directions here:
     https://developers.google.com/maps/documentation/android/start#get-key
@@ -20,5 +20,5 @@
     Once you have your key (it starts with "AIza"), replace the "google_maps_key"
     string in this file.
     -->
-    <string name="google_maps_key" templateMergeStrategy="preserve" translatable="false">AIzaSyASkK0MWNI_l3Rkf3cQfuO-ZhT_TguLh5w</string>
+    <string name="google_maps_key" templateMergeStrategy="preserve" translatable="false">AIzaSyAuFq6ssfQf2YfckZ2S8D6P38KWcehwdQw</string>
 </resources>
