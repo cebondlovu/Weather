@@ -1,4 +1,4 @@
-package com.softcrypt.weather.common;
+package com.softcrypt.weather.database;
 
 import android.content.ContentValues;
 import android.content.Context;
@@ -8,6 +8,7 @@ import android.database.sqlite.SQLiteOpenHelper;
 
 import androidx.annotation.Nullable;
 
+import com.softcrypt.weather.base.BaseApplication;
 import com.softcrypt.weather.database.MyLocations;
 import com.softcrypt.weather.models.ItemLocation;
 
@@ -19,7 +20,7 @@ public class LocationsDatabaseHelper extends SQLiteOpenHelper {
     private static final int DATABASE_VERSION = 1;
     SQLiteDatabase db;
 
-    public LocationsDatabaseHelper(@Nullable Context context) {
+    public LocationsDatabaseHelper(BaseApplication context) {
         super(context,DATABASE_NAME, null,DATABASE_VERSION);
     }
 
@@ -33,7 +34,7 @@ public class LocationsDatabaseHelper extends SQLiteOpenHelper {
         MyLocations.onUpgrade(sqLiteDatabase, i, i1);
     }
 
-    public  void insertNewPlace(ItemLocation itemLocation) {
+    public void insertNewPlace(ItemLocation itemLocation) {
         db = this.getWritableDatabase();
 
         ContentValues values = new ContentValues();
@@ -46,6 +47,7 @@ public class LocationsDatabaseHelper extends SQLiteOpenHelper {
             db.insertWithOnConflict(MyLocations.TABLE_LOCATIONS, null, values,
                     SQLiteDatabase.CONFLICT_REPLACE);
             db.setTransactionSuccessful();
+
         } finally {
             db.endTransaction();
         }

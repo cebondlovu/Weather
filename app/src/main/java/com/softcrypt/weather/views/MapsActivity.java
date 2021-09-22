@@ -3,6 +3,7 @@ package com.softcrypt.weather.views;
 import androidx.annotation.NonNull;
 import androidx.core.app.ActivityCompat;
 import androidx.fragment.app.FragmentActivity;
+import androidx.lifecycle.ViewModelProvider;
 
 import android.Manifest;
 import android.content.pm.PackageManager;
@@ -27,12 +28,16 @@ import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.softcrypt.weather.R;
 import com.softcrypt.weather.base.BaseApplication;
-import com.softcrypt.weather.common.LocationsDatabaseHelper;
+import com.softcrypt.weather.database.LocationsDatabaseHelper;
 import com.softcrypt.weather.models.ItemLocation;
 import com.softcrypt.weather.utils.ViewPopup;
+import com.softcrypt.weather.viewModels.MainViewModel;
+import com.softcrypt.weather.viewModels.MapsViewModel;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import javax.inject.Inject;
 
 public class MapsActivity extends FragmentActivity implements OnMapReadyCallback, GoogleMap.OnMarkerDragListener {
 
@@ -45,6 +50,16 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     private List<LatLng> other_locations = new ArrayList<>();
     private ViewPopup popup = new ViewPopup();
     private ArrayList<ItemLocation> myList;
+
+    @Inject
+    ViewModelProvider.Factory viewModelFactory;
+    private MapsViewModel mapsViewModel;
+
+/*    @Override
+    protected void onStart() {
+        super.onStart();
+        mapsViewModel = new ViewModelProvider(this, viewModelFactory).get(MapsViewModel.class);
+    }*/
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -66,16 +81,16 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     private void getLocations() {
         myList = new ArrayList<>();
 
-        dbHelper = new LocationsDatabaseHelper(this);
+        dbHelper = new LocationsDatabaseHelper((BaseApplication) this.getApplication());
 
-        if (dbHelper.getAllUserLocations().size() != 0) {
+/*        if (dbHelper.getAllUserLocations().size() != 0) {
             for (int i = 0; i < dbHelper.getAllUserLocations().size(); i++) {
                 myList = dbHelper.getAllUserLocations();
                 other_locations.add(
                         new LatLng(Double.parseDouble(myList.get(i).getLat()),
                                 Double.parseDouble(myList.get(i).getLng())));
             }
-        }
+        }*/
     }
 
     @Override
@@ -170,7 +185,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             Toast.makeText(this,"You Have Reached Limit of 4", Toast.LENGTH_LONG).show();
         else
             popup.confirmPopup(String.valueOf(marker.getPosition().longitude),
-                    String.valueOf(marker.getPosition().latitude),this);
+                    String.valueOf(marker.getPosition().latitude),(BaseApplication)this.getApplication());
     }
 
     @Override

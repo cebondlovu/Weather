@@ -3,6 +3,7 @@ package com.softcrypt.weather.views;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
+import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -16,12 +17,16 @@ import android.widget.Toast;
 
 import com.softcrypt.weather.adapters.LocationsAdapter;
 import com.softcrypt.weather.base.BaseApplication;
-import com.softcrypt.weather.common.LocationsDatabaseHelper;
+import com.softcrypt.weather.database.LocationsDatabaseHelper;
 import com.softcrypt.weather.models.ItemLocation;
 import com.softcrypt.weather.R;
+import com.softcrypt.weather.viewModels.LocationsViewModel;
+import com.softcrypt.weather.viewModels.MainViewModel;
 
 import java.util.ArrayList;
 import java.util.Objects;
+
+import javax.inject.Inject;
 
 public class LocationsActivity extends AppCompatActivity {
 
@@ -30,6 +35,16 @@ public class LocationsActivity extends AppCompatActivity {
     TextView txt_no_data;
     LocationsDatabaseHelper dbHelper;
     Toolbar toolbar;
+
+    @Inject
+    ViewModelProvider.Factory viewModelFactory;
+    private LocationsViewModel locationsViewModel;
+
+/*    @Override
+    protected void onStart() {
+        super.onStart();
+        locationsViewModel = new ViewModelProvider(this, viewModelFactory).get(LocationsViewModel.class);
+    }*/
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -98,15 +113,15 @@ public class LocationsActivity extends AppCompatActivity {
     }
 
     public void getLocations(){
-        dbHelper = new LocationsDatabaseHelper(this);
+        dbHelper = new LocationsDatabaseHelper((BaseApplication) this.getApplication());
         ArrayList<ItemLocation> list;
         list = dbHelper.getAllUserLocations();
-        LocationsAdapter adapter = new LocationsAdapter(this,list);
+        LocationsAdapter adapter = new LocationsAdapter((BaseApplication) this.getApplication(),list);
         locations_recycler.setAdapter(adapter);
     }
 
     public void showProcedure(){
-        dbHelper = new LocationsDatabaseHelper(this);
+        dbHelper = new LocationsDatabaseHelper((BaseApplication) this.getApplication());
 
         if (dbHelper.getAllUserLocations().size() == 4) {
             add_location_btn.setVisibility(View.GONE);

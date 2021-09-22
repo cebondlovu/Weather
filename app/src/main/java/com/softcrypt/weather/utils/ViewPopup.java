@@ -11,7 +11,8 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.softcrypt.weather.common.LocationsDatabaseHelper;
+import com.softcrypt.weather.base.BaseApplication;
+import com.softcrypt.weather.database.LocationsDatabaseHelper;
 import com.softcrypt.weather.models.ItemLocation;
 import com.softcrypt.weather.R;
 
@@ -20,7 +21,7 @@ import java.util.UUID;
 public class ViewPopup {
     private LocationsDatabaseHelper dbHelper;
 
-    public void confirmPopup(final String lon, final String lat, final Context context) {
+    public void confirmPopup(final String lon, final String lat, final BaseApplication context) {
         Button save;
         Button cancel;
         final TextView txt_error,txt_latitude,txt_longitude;
@@ -79,7 +80,7 @@ public class ViewPopup {
         dialog.show();
     }
 
-    public void deleteItem(final String uniqueID,final String name, final  Context context){
+    public void deleteItem(final String uniqueID,final String name, final  BaseApplication context){
         Button yes;
         Button no;
         ImageView icon;

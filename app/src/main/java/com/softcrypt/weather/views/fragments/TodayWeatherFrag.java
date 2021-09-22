@@ -14,18 +14,14 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.softcrypt.weather.common.Common;
-import com.softcrypt.weather.common.LocationsDatabaseHelper;
+import com.softcrypt.weather.database.LocationsDatabaseHelper;
 import com.softcrypt.weather.models.ItemLocation;
 import com.softcrypt.weather.R;
 import com.softcrypt.weather.models.WeatherResult;
-import com.softcrypt.weather.remote.IOpenWeatherAPI;
 import com.softcrypt.weather.viewModels.MainViewModel;
-import com.softcrypt.weather.views.MainActivity;
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
-
-import io.reactivex.disposables.CompositeDisposable;
 
 /**
  * A simple {@link Fragment} subclass.

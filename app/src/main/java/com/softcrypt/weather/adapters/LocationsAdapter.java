@@ -1,5 +1,6 @@
 package com.softcrypt.weather.adapters;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -10,7 +11,8 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.softcrypt.weather.common.LocationsDatabaseHelper;
+import com.softcrypt.weather.base.BaseApplication;
+import com.softcrypt.weather.database.LocationsDatabaseHelper;
 import com.softcrypt.weather.models.ItemLocation;
 import com.softcrypt.weather.R;
 import com.softcrypt.weather.utils.ViewPopup;
@@ -19,12 +21,12 @@ import java.util.ArrayList;
 
 public class LocationsAdapter extends RecyclerView.Adapter<LocationsAdapter.MyViewHolder> {
 
-    Context context;
+    BaseApplication context;
     ArrayList<ItemLocation> list;
     LocationsDatabaseHelper dbHelper;
     ViewPopup popup = new ViewPopup();
 
-    public LocationsAdapter(Context context, ArrayList<ItemLocation> list) {
+    public LocationsAdapter(BaseApplication context, ArrayList<ItemLocation> list) {
         this.context = context;
         this.list = list;
     }
@@ -38,7 +40,7 @@ public class LocationsAdapter extends RecyclerView.Adapter<LocationsAdapter.MyVi
     }
 
     @Override
-    public void onBindViewHolder(@NonNull final MyViewHolder holder, final int position) {
+    public void onBindViewHolder(@NonNull final MyViewHolder holder, @SuppressLint("RecyclerView") final int position) {
         holder.txt_name.setText(new StringBuilder(list.get(position).getName()));
         holder.txt_lat.setText(new StringBuilder("[ ").append(list.get(position).getLat()).append(" ]").toString());
         holder.txt_lon.setText(new StringBuilder("[ ").append(list.get(position).getLng()).append(" ]").toString());
@@ -46,7 +48,7 @@ public class LocationsAdapter extends RecyclerView.Adapter<LocationsAdapter.MyVi
             @Override
             public void onClick(View view) {
                 popup.deleteItem(list.get(position).getUniqueID(),list.get(position).getName(),
-                        view.getContext());
+                        (BaseApplication) view.getContext().getApplicationContext());
                 notifyDataSetChanged();
             }
         });
