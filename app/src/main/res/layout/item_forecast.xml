@@ -19,7 +19,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textColor="@color/colorPrimary"
-            android:textSize="22sp"
+            android:textSize="20sp"
             android:textStyle="bold"
             android:text="Thursday"/>
         <LinearLayout
@@ -29,8 +29,8 @@
 
             <ImageView
                 android:id="@+id/img_weather"
-                android:layout_width="70dp"
-                android:layout_height="70dp"
+                android:layout_width="60dp"
+                android:layout_height="60dp"
                 tools:srcCompat="@tools:sample/avatars" />
             <TextView
                 android:id="@+id/txt_temperature"
@@ -39,7 +39,7 @@
                 android:textColor="@color/colorAlt"
                 android:text="14 C"
                 android:textStyle="bold"
-                android:textSize="40sp"/>
+                android:textSize="30sp"/>
         </LinearLayout>
         <TextView
             android:id="@+id/txt_description"

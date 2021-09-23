@@ -10,6 +10,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.softcrypt.weather.adapters.WeatherForecastAdapter;
@@ -32,6 +33,7 @@ public class ForecastFrag extends Fragment {
 
     TextView txt_city_name,txt_geo_coord;
     RecyclerView recycler_forecast;
+    LinearLayout main_info;
 
     static ForecastFrag instance;
 
@@ -54,6 +56,7 @@ public class ForecastFrag extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,Bundle savedInstanceState) {
         //
         View itemView = inflater.inflate(R.layout.fragment_forecast, container, false);
+        main_info = itemView.findViewById(R.id.main_info);
         txt_city_name = itemView.findViewById(R.id.txt_city_name);
         txt_geo_coord = itemView.findViewById(R.id.txt_geo_coord);
         recycler_forecast = itemView.findViewById(R.id.recycler_forecast);
@@ -74,7 +77,12 @@ public class ForecastFrag extends Fragment {
 
                     @Override
                     public void onChanged(WeatherForecastResult weatherForecastResult) {
-                        displayForecastWeather(weatherForecastResult);
+                        if(weatherForecastResult == null){
+                            main_info.setVisibility(View.INVISIBLE);
+                        } else {
+                            main_info.setVisibility(View.VISIBLE);
+                            displayForecastWeather(weatherForecastResult);
+                        }
                     }
                 });
     }

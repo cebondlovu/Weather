@@ -31,6 +31,7 @@
                 android:layout_height="wrap_content"
                 android:layout_centerVertical="true"
                 android:layout_marginStart="15dp"
+                android:layout_toStartOf="@id/image"
                 android:gravity="center"
                 android:text="Stored Locations"
                 android:textColor="@color/colorTitle"
@@ -39,28 +40,28 @@
 
             <ImageView
                 android:id="@+id/image"
-                android:layout_width="40dp"
-                android:layout_height="40dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
                 android:layout_marginStart="2dp"
                 android:layout_marginTop="2dp"
-                android:layout_marginEnd="20dp"
+                android:layout_marginEnd="10dp"
                 android:layout_marginBottom="2dp"
                 android:layout_toLeftOf="@+id/backup_img"
-                android:padding="4dp"
                 android:onClick="importStart"
+                android:padding="4dp"
                 android:src="@drawable/ic_baseline_import_export_24" />
 
             <ImageView
                 android:id="@+id/backup_img"
-                android:layout_width="40dp"
-                android:layout_height="40dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
                 android:layout_alignParentEnd="true"
                 android:layout_marginStart="2dp"
                 android:layout_marginTop="2dp"
-                android:layout_marginEnd="20dp"
+                android:layout_marginEnd="8dp"
                 android:layout_marginBottom="2dp"
-                android:padding="4dp"
                 android:onClick="backupStart"
+                android:padding="4dp"
                 android:src="@drawable/ic_baseline_backup_24" />
         </RelativeLayout>
     </androidx.appcompat.widget.Toolbar>
