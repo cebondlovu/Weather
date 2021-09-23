@@ -10,6 +10,6 @@
     <color name="colorTabText">#7A7A7A</color>
     <color name="colorAlt">#1E75F6</color>
     <color name="colorShadow">#CC151515</color>
-    <color name="colorSubText">#7A7A7A</color>
+    <color name="colorSubText">#AEAEAE</color>
     <color name="colorNonVisible">#00000000</color>
 </resources>

@@ -34,34 +34,36 @@
                 android:layout_toStartOf="@id/image"
                 android:gravity="center"
                 android:layout_alignParentStart="true"
-                android:text="Stored Locations"
+                android:text="@string/stored_locations"
                 android:textColor="@color/colorTitle"
                 android:textSize="18sp"
                 android:textStyle="bold" />
 
             <ImageView
                 android:id="@+id/image"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_width="48dp"
+                android:layout_height="48dp"
                 android:layout_marginStart="2dp"
                 android:layout_marginTop="2dp"
                 android:layout_marginEnd="10dp"
                 android:layout_marginBottom="2dp"
-                android:layout_toLeftOf="@+id/backup_img"
+                android:contentDescription="@string/import_button"
+                android:layout_toStartOf="@+id/backup_img"
                 android:onClick="importStart"
                 android:padding="4dp"
                 android:src="@drawable/ic_baseline_import_export_24" />
 
             <ImageView
                 android:id="@+id/backup_img"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_width="48dp"
+                android:layout_height="48dp"
                 android:layout_alignParentEnd="true"
                 android:layout_marginStart="2dp"
                 android:layout_marginTop="2dp"
                 android:layout_marginEnd="8dp"
                 android:layout_marginBottom="2dp"
                 android:onClick="backupStart"
+                android:contentDescription="@string/backup_button"
                 android:padding="4dp"
                 android:src="@drawable/ic_baseline_backup_24" />
         </RelativeLayout>

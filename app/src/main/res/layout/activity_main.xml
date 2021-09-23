@@ -26,6 +26,7 @@
                 android:layout_gravity="center_vertical">
 
                 <ImageView
+                    android:contentDescription="@string/logo"
                     android:id="@+id/logo"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -35,8 +36,9 @@
 
                 <ImageView
                     android:id="@+id/add"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
+                    android:contentDescription="@string/add_location_button"
+                    android:layout_width="48dp"
+                    android:layout_height="48dp"
                     android:layout_alignParentEnd="true"
                     android:layout_marginEnd="8dp"
                     android:onClick="goToAddLocationAct"
@@ -49,29 +51,30 @@
                     android:layout_centerVertical="true"
                     android:layout_marginStart="15dp"
                     android:layout_marginEnd="15dp"
-                    android:layout_toLeftOf="@id/add"
-                    android:layout_toRightOf="@+id/logo"
+                    android:layout_toStartOf="@id/add"
+                    android:layout_toEndOf="@+id/logo"
                     android:gravity="center"
-                    android:text="Weather App"
+                    android:text="@string/weather_app"
                     android:textColor="@color/colorTitle"
                     android:textSize="18sp" />
             </RelativeLayout>
         </androidx.appcompat.widget.Toolbar>
     </com.google.android.material.appbar.AppBarLayout>
-                <TextView
-                    android:id="@+id/txt_title"
-                    android:layout_width="match_parent"
-                    android:layout_height="40dp"
-                    android:text="Weather Updates"
-                    android:textSize="16sp"
-                    android:textAlignment="center"
-                    android:textColor="@color/colorSubText"
-                    android:layout_margin="6dp"
-                    android:layout_gravity="bottom|center"
-                    android:gravity="center"
-                    app:layout_constraintTop_toBottomOf="@id/navbar.main"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintEnd_toEndOf="parent"/>
+
+    <TextView
+        android:id="@+id/txt_title"
+        android:layout_width="match_parent"
+        android:layout_height="40dp"
+        android:layout_gravity="bottom|center"
+        android:layout_margin="6dp"
+        android:gravity="center"
+        android:text="@string/weather_updates"
+        android:textAlignment="center"
+        android:textColor="@color/colorSubText"
+        android:textSize="16sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/navbar.main" />
 
         <com.google.android.material.tabs.TabLayout
             android:id="@+id/tabs"
@@ -84,6 +87,7 @@
             app:tabIndicatorHeight="6dp"
             app:tabMode="fixed"
             app:tabGravity="fill"
+            android:contentDescription="@string/tabs"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toBottomOf="@id/txt_title"/>
@@ -92,6 +96,7 @@
         android:id="@+id/view_pager"
         android:layout_width="0dp"
         android:layout_height="0dp"
+        android:contentDescription="@string/viewpager_for_fragments"
         app:layout_behavior="@string/appbar_scrolling_view_behavior"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
