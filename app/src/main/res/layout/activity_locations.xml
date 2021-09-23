@@ -33,6 +33,7 @@
                 android:layout_marginStart="15dp"
                 android:layout_toStartOf="@id/image"
                 android:gravity="center"
+                android:layout_alignParentStart="true"
                 android:text="Stored Locations"
                 android:textColor="@color/colorTitle"
                 android:textSize="18sp"
