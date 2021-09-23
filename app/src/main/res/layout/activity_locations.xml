@@ -24,6 +24,7 @@
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
+
             <TextView
                 android:id="@+id/title"
                 android:layout_width="wrap_content"
@@ -35,6 +36,30 @@
                 android:textColor="@color/colorTitle"
                 android:textSize="18sp"
                 android:textStyle="bold" />
+
+            <ImageView
+                android:id="@+id/import_img"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:layout_marginStart="2dp"
+                android:layout_marginTop="2dp"
+                android:layout_marginEnd="20dp"
+                android:layout_marginBottom="2dp"
+                android:layout_toLeftOf="@+id/backup_img"
+                android:padding="4dp"
+                android:src="@drawable/ic_baseline_import_export_24" />
+
+            <ImageView
+                android:id="@+id/backup_img"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:layout_alignParentEnd="true"
+                android:layout_marginStart="2dp"
+                android:layout_marginTop="2dp"
+                android:layout_marginEnd="20dp"
+                android:layout_marginBottom="2dp"
+                android:padding="4dp"
+                android:src="@drawable/ic_baseline_backup_24" />
         </RelativeLayout>
     </androidx.appcompat.widget.Toolbar>
     </com.google.android.material.appbar.AppBarLayout>
@@ -78,9 +103,11 @@
         android:layout_marginBottom="16dp"
         android:background="@drawable/blue_button"
         android:text="Add Locations"
+        android:onClick="addLocation"
         android:textColor="@color/colorTitle"
-        android:textSize="18sp"
+        android:textSize="16sp"
         android:visibility="visible"
+        android:textAlignment="center"
         app:layout_constraintBottom_toTopOf="@+id/delete_all_btn"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent" />
@@ -94,8 +121,9 @@
         android:layout_marginBottom="16dp"
         android:background="@drawable/red_button"
         android:text="Delete All"
+        android:onClick="deleteAllLocations"
         android:textColor="@color/colorTitle"
-        android:textSize="18sp"
+        android:textSize="16sp"
         android:visibility="visible"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"

@@ -1,7 +1,13 @@
 package com.softcrypt.weather.models;
 
-public class ItemLocation {
-    private String uniqueID;
+import io.realm.RealmObject;
+import io.realm.annotations.PrimaryKey;
+
+public class ItemLocation extends RealmObject {
+
+    @PrimaryKey
+    private int id;
+    private String uniqueId;
     private String name;
     private String lng;
     private String lat;
@@ -9,19 +15,28 @@ public class ItemLocation {
     public ItemLocation() {
     }
 
-    public ItemLocation(String uniqueID, String name, String lng, String lat) {
-        this.uniqueID = uniqueID;
+    public ItemLocation(int id, String uniqueId, String name, String lng, String lat) {
+        this.id = id;
+        this.uniqueId = uniqueId;
         this.name = name;
         this.lng = lng;
         this.lat = lat;
     }
 
-    public String getUniqueID() {
-        return uniqueID;
+    public int getId() {
+        return id;
     }
 
-    public void setUniqueID(String uniqueID) {
-        this.uniqueID = uniqueID;
+    public void setId(int id) {
+        this.id = id;
+    }
+
+    public String getUniqueId() {
+        return uniqueId;
+    }
+
+    public void setUniqueId(String uniqueId) {
+        this.uniqueId = uniqueId;
     }
 
     public String getName() {

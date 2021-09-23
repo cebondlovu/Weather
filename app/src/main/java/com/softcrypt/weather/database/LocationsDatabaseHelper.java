@@ -1,127 +1,129 @@
 package com.softcrypt.weather.database;
 
-import android.content.ContentValues;
-import android.content.Context;
-import android.database.Cursor;
-import android.database.sqlite.SQLiteDatabase;
-import android.database.sqlite.SQLiteOpenHelper;
-
-import androidx.annotation.Nullable;
+import android.app.Dialog;
+import android.os.Environment;
+import android.widget.Toast;
 
 import com.softcrypt.weather.base.BaseApplication;
-import com.softcrypt.weather.database.MyLocations;
 import com.softcrypt.weather.models.ItemLocation;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
 import java.util.ArrayList;
+import java.util.Objects;
 
-public class LocationsDatabaseHelper extends SQLiteOpenHelper {
+import io.realm.Realm;
+import io.realm.internal.IOException;
 
-    private static final String DATABASE_NAME = "mylocationsA";
-    private static final int DATABASE_VERSION = 1;
-    SQLiteDatabase db;
+public class LocationsDatabaseHelper {
 
-    public LocationsDatabaseHelper(BaseApplication context) {
-        super(context,DATABASE_NAME, null,DATABASE_VERSION);
+    private File EXPORT_REALM_PATH = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS);
+    private static final String EXPORT_DATABASE_NAME = "locations.realm";
+    private static final String IMPORT_DATABASE_NAME = "locations.realm";
+    private BaseApplication context;
+    private Realm realm;
+
+    public LocationsDatabaseHelper(BaseApplication context, Realm realm) {
+        this.context = context;
+        this.realm = realm;
     }
 
-    @Override
-    public void onCreate(SQLiteDatabase sqLiteDatabase) {
-        MyLocations.onCreate(sqLiteDatabase);
+    public int getNextLocationKey() {
+        if (realm.where(ItemLocation.class).count() > 0)
+            return Objects.requireNonNull(realm.where(ItemLocation.class).max("id")).intValue() + 1;
+        else
+            return 0;
     }
 
-    @Override
-    public void onUpgrade(SQLiteDatabase sqLiteDatabase, int i, int i1) {
-        MyLocations.onUpgrade(sqLiteDatabase, i, i1);
+    public int getLocationsCount() {
+        return (int) realm.where(ItemLocation.class).count();
     }
 
-    public void insertNewPlace(ItemLocation itemLocation) {
-        db = this.getWritableDatabase();
+    public void insertLocation(ItemLocation itemLocation) {
+        ItemLocation modal = realm.where(ItemLocation.class)
+                .equalTo("name", itemLocation.getName())
+                .findFirst();
+        if(modal == null) {
+            realm.beginTransaction();
+            ItemLocation itemLocationData = realm.createObject(ItemLocation.class, getNextLocationKey());
+            itemLocationData.setUniqueId(itemLocation.getUniqueId());
+            itemLocationData.setName(itemLocation.getName());
+            itemLocationData.setLat(itemLocation.getLat());
+            itemLocationData.setLng(itemLocation.getLng());
+            realm.commitTransaction();
+        }
+    }
 
-        ContentValues values = new ContentValues();
-        values.put(MyLocations.COLUMN_UNIQUE_ID, itemLocation.getUniqueID());
-        values.put(MyLocations.COLUMN_NAME, itemLocation.getName());
-        values.put(MyLocations.COLUMN_LAT, itemLocation.getLat());
-        values.put(MyLocations.COLUMN_LNG, itemLocation.getLng());
+    public void updateLocation(ItemLocation itemLocation) {
+        realm.beginTransaction();
+        realm.copyToRealmOrUpdate(itemLocation);
+        realm.commitTransaction();
+    }
+
+    public void deleteLocation(String uniqueId) {
+        ItemLocation modal = realm.where(ItemLocation.class)
+                .equalTo("uniqueId", uniqueId)
+                .findFirst();
+        realm.executeTransaction(realm -> {
+              modal.deleteFromRealm();
+        });
+    }
+
+    public void deleteAllLocations(){
+        realm.beginTransaction();
+        realm.delete(ItemLocation.class);
+        realm.commitTransaction();
+    }
+
+    public ArrayList getAllLocations(){
+        return new ArrayList(realm.where(ItemLocation.class).findAll());
+    }
+
+    public ItemLocation getLocation(String name) {
+        ItemLocation modal = realm.where(ItemLocation.class)
+                .equalTo("name", name)
+                .findFirst();
+
+        return modal;
+    }
+
+    public void backup() {
+        File exportRealmFile;
+        exportRealmFile = new File(EXPORT_REALM_PATH, EXPORT_DATABASE_NAME);
+        exportRealmFile.delete();
+        realm.writeCopyTo(exportRealmFile);
+        String msg = "File exported to Path: " + EXPORT_REALM_PATH + "/" + EXPORT_DATABASE_NAME;
+        Toast.makeText(context, "Done", Toast.LENGTH_LONG).show();
+
+    }
+
+    public void restore(String restoreFilePath){
+        copyBundledRealmFile(restoreFilePath, IMPORT_DATABASE_NAME);
+        Toast.makeText(context, "Restored", Toast.LENGTH_LONG).show();
+
+
+    }
+
+    private String copyBundledRealmFile(String oldFilePath, String outFileName) {
         try {
-            db.beginTransaction();
-            db.insertWithOnConflict(MyLocations.TABLE_LOCATIONS, null, values,
-                    SQLiteDatabase.CONFLICT_REPLACE);
-            db.setTransactionSuccessful();
+            File file = new File(context.getApplicationContext().getFilesDir(), outFileName);
 
-        } finally {
-            db.endTransaction();
+            FileOutputStream outputStream = new FileOutputStream(file);
+
+            FileInputStream inputStream = new FileInputStream(oldFilePath);
+
+            byte[] buf = new byte[1024];
+            int bytesRead;
+            while ((bytesRead = inputStream.read(buf)) > 0) {
+                outputStream.write(buf, 0, bytesRead);
+            }
+            outputStream.close();
+            return file.getAbsolutePath();
+        } catch (IOException | java.io.IOException e) {
+            e.printStackTrace();
         }
+        return null;
     }
 
-    public void deletePlace(String uniqueID){
-        db = this.getWritableDatabase();
-        try {
-            db.beginTransaction();
-            db.delete(MyLocations.TABLE_LOCATIONS, MyLocations.COLUMN_UNIQUE_ID+" = ? ",
-                    new String[]{uniqueID});
-            db.setTransactionSuccessful();
-        } finally {
-            db.endTransaction();
-        }
-    }
-
-    public void deleteAllPlaces(){
-        db = this.getWritableDatabase();
-        try {
-            db.beginTransaction();
-            db.delete(MyLocations.TABLE_LOCATIONS, null, null);
-            db.setTransactionSuccessful();
-        } finally {
-            db.endTransaction();
-        }
-
-    }
-
-    public ArrayList<ItemLocation> getAllUserLocations(){
-        ArrayList<ItemLocation> itemLocationsList = new ArrayList<>();
-        db = this.getReadableDatabase();
-
-        Cursor cursor = db.query(MyLocations.TABLE_LOCATIONS,new String[]{MyLocations.COLUMN_UNIQUE_ID,
-                        MyLocations.COLUMN_NAME,MyLocations.COLUMN_LAT,
-                        MyLocations.COLUMN_LNG},
-                null,null,null,null,null);
-
-        while(cursor.moveToNext()){
-            int id = cursor.getColumnIndex(MyLocations.COLUMN_UNIQUE_ID);
-            int name = cursor.getColumnIndex(MyLocations.COLUMN_NAME);
-            int latitude = cursor.getColumnIndex(MyLocations.COLUMN_LAT);
-            int longitude = cursor.getColumnIndex(MyLocations.COLUMN_LNG);
-            itemLocationsList.add(new ItemLocation(
-                    cursor.getString(id),cursor.getString(name), cursor.getString(latitude),
-                    cursor.getString(longitude)
-            ));
-        }
-
-        cursor.close();
-        db.close();
-
-        return  itemLocationsList;
-    }
-
-    public ItemLocation getSelectedLocationCoord(String name){
-
-        ItemLocation toDoItemInfo = new ItemLocation();
-        db = this.getReadableDatabase();
-
-        Cursor cursor = db.rawQuery("SELECT * FROM "+MyLocations.TABLE_LOCATIONS+" WHERE "+
-                MyLocations.COLUMN_NAME+" =? ",new String[]{name});
-
-        while(cursor.moveToNext()){
-
-            int lat = cursor.getColumnIndex(MyLocations.COLUMN_LAT);
-            int lon = cursor.getColumnIndex(MyLocations.COLUMN_LNG);
-
-            toDoItemInfo.setLat(cursor.getString(lat));
-            toDoItemInfo.setLng(cursor.getString(lon));
-        }
-
-        cursor.close();
-
-        return  toDoItemInfo;
-    }
 }

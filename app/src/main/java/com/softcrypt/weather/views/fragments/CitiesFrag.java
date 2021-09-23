@@ -180,32 +180,29 @@ public class CitiesFrag extends Fragment {
 
     private void getWeatherInformation(String cityName) {
         mainViewModel.getCityModelMutableLivData(cityName, Common.$API_KEY, "metric")
-                .observe(requireActivity(), new Observer<WeatherResult>() {
-                    @Override
-                    public void onChanged(WeatherResult weatherResult) {
-                        Picasso.get().load(new StringBuilder("https://openweathermap.org/img/w/")
-                                .append(weatherResult.getWeather().get(0).getIcon())
-                                .append(".png").toString()).into(img_weather);
+                .observe(requireActivity(), weatherResult -> {
+                    Picasso.get().load(new StringBuilder("https://openweathermap.org/img/w/")
+                            .append(weatherResult.getWeather().get(0).getIcon())
+                            .append(".png").toString()).into(img_weather);
 
-                        txt_city_name.setText(weatherResult.getName());
-                        txt_description.setText(new StringBuilder("Weather In ")
-                                .append(weatherResult.getName()).toString());
-                        txt_temperature.setText(new StringBuilder(String.valueOf(
-                                weatherResult.getMain().getTemp())).append("°C").toString());
-                        txt_wind.setText(new StringBuilder(String.valueOf(
-                                weatherResult.getWind().getSpeed())).append(" km/h").toString());
-                        txt_date_time.setText(Common.convertUnixToDate(weatherResult.getDt()));
-                        txt_pressure.setText(new StringBuilder(String.valueOf(
-                                weatherResult.getMain().getPressure())).append(" hpa").toString());
-                        txt_humidity.setText(new StringBuilder(String.valueOf(
-                                weatherResult.getMain().getHumidity())).append(" %").toString());
-                        txt_sunrise.setText(Common.convertUnixToHour(weatherResult.getSys().getSunrise()));
-                        txt_sunset.setText(Common.convertUnixToHour(weatherResult.getSys().getSunset()));
-                        txt_geo_coord.setText(new StringBuilder(weatherResult.getCoord().toString()).toString());
+                    txt_city_name.setText(weatherResult.getName());
+                    txt_description.setText(new StringBuilder("Weather In ")
+                            .append(weatherResult.getName()).toString());
+                    txt_temperature.setText(new StringBuilder(String.valueOf(
+                            weatherResult.getMain().getTemp())).append("°C").toString());
+                    txt_wind.setText(new StringBuilder(String.valueOf(
+                            weatherResult.getWind().getSpeed())).append(" km/h").toString());
+                    txt_date_time.setText(Common.convertUnixToDate(weatherResult.getDt()));
+                    txt_pressure.setText(new StringBuilder(String.valueOf(
+                            weatherResult.getMain().getPressure())).append(" hpa").toString());
+                    txt_humidity.setText(new StringBuilder(String.valueOf(
+                            weatherResult.getMain().getHumidity())).append(" %").toString());
+                    txt_sunrise.setText(Common.convertUnixToHour(weatherResult.getSys().getSunrise()));
+                    txt_sunset.setText(Common.convertUnixToHour(weatherResult.getSys().getSunset()));
+                    txt_geo_coord.setText(new StringBuilder(weatherResult.getCoord().toString()).toString());
 
-                        weather_panel.setVisibility(View.VISIBLE);
-                        loading.setVisibility(View.GONE);
-                    }
+                    weather_panel.setVisibility(View.VISIBLE);
+                    loading.setVisibility(View.GONE);
                 });
     }
 

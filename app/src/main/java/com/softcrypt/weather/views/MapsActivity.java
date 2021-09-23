@@ -3,9 +3,9 @@ package com.softcrypt.weather.views;
 import androidx.annotation.NonNull;
 import androidx.core.app.ActivityCompat;
 import androidx.fragment.app.FragmentActivity;
-import androidx.lifecycle.ViewModelProvider;
 
 import android.Manifest;
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Color;
 import android.os.Bundle;
@@ -28,16 +28,13 @@ import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.softcrypt.weather.R;
 import com.softcrypt.weather.base.BaseApplication;
-import com.softcrypt.weather.database.LocationsDatabaseHelper;
-import com.softcrypt.weather.models.ItemLocation;
-import com.softcrypt.weather.utils.ViewPopup;
-import com.softcrypt.weather.viewModels.MainViewModel;
+
 import com.softcrypt.weather.viewModels.MapsViewModel;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.inject.Inject;
+import io.realm.Realm;
 
 public class MapsActivity extends FragmentActivity implements OnMapReadyCallback, GoogleMap.OnMarkerDragListener {
 
@@ -46,30 +43,25 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     private LocationRequest locationRequest;
     private LocationCallback locationCallback;
     private Marker currentUser;
-    private LocationsDatabaseHelper dbHelper;
-    private List<LatLng> other_locations = new ArrayList<>();
-    private ViewPopup popup = new ViewPopup();
-    private ArrayList<ItemLocation> myList;
+    private final List<LatLng> other_locations = new ArrayList<>();
 
-    @Inject
-    ViewModelProvider.Factory viewModelFactory;
     private MapsViewModel mapsViewModel;
 
-/*    @Override
+    @Override
     protected void onStart() {
         super.onStart();
-        mapsViewModel = new ViewModelProvider(this, viewModelFactory).get(MapsViewModel.class);
-    }*/
+        mapsViewModel = new MapsViewModel((BaseApplication) this.getApplication(), Realm.getDefaultInstance());
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_maps);
         ((BaseApplication) getApplication()).getAppComponent().injectMapsAct(this);
+        mapsViewModel = new MapsViewModel((BaseApplication) this.getApplication(), Realm.getDefaultInstance());
         buildLocationRequest();
         buildLocationCallBack();
         getLocations();
-
         fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(this);
 
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
@@ -79,22 +71,21 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     }
 
     private void getLocations() {
-        myList = new ArrayList<>();
-
-        dbHelper = new LocationsDatabaseHelper((BaseApplication) this.getApplication());
-
-/*        if (dbHelper.getAllUserLocations().size() != 0) {
-            for (int i = 0; i < dbHelper.getAllUserLocations().size(); i++) {
-                myList = dbHelper.getAllUserLocations();
-                other_locations.add(
-                        new LatLng(Double.parseDouble(myList.get(i).getLat()),
-                                Double.parseDouble(myList.get(i).getLng())));
-            }
-        }*/
+        mapsViewModel.getLocCountMutableLivData().observe(this, count -> {
+            mapsViewModel.getAllLocationsMutableLivData().observe(this, itemLocations -> {
+                if (itemLocations != null)
+                    if (Integer.parseInt(count) > 0) {
+                        for (int i = 0; i < itemLocations.size(); i++) {
+                            other_locations.add(new LatLng(Double.parseDouble(itemLocations.get(i).getLat()),
+                                    Double.parseDouble(itemLocations.get(i).getLng())));
+                        }
+                    }
+            });
+        });
     }
 
     @Override
-    public void onMapReady(GoogleMap googleMap) {
+    public void onMapReady(@NonNull GoogleMap googleMap) {
         mMap = googleMap;
         mMap.getUiSettings().setAllGesturesEnabled(true);
         mMap.getUiSettings().setZoomControlsEnabled(true);
@@ -135,7 +126,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     }
 
     private void buildLocationRequest() {
-        locationRequest = new LocationRequest();
+        locationRequest = LocationRequest.create();
         locationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
         locationRequest.setInterval(5000);
         locationRequest.setFastestInterval(3000);
@@ -181,11 +172,17 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
     @Override
     public void onMarkerDragEnd(@NonNull Marker marker) {
-        if(dbHelper.getAllUserLocations().size() >= 4)
-            Toast.makeText(this,"You Have Reached Limit of 4", Toast.LENGTH_LONG).show();
-        else
-            popup.confirmPopup(String.valueOf(marker.getPosition().longitude),
-                    String.valueOf(marker.getPosition().latitude),(BaseApplication)this.getApplication());
+        mapsViewModel.getAllLocationsMutableLivData().observe(this, itemLocations -> {
+            if(itemLocations.size() >= 8)
+                Toast.makeText(this,"You Have Reached Limit of 8", Toast.LENGTH_LONG).show();
+            else {
+                Intent intent = new Intent(this, ViewPopup.class);
+                intent.putExtra(ViewPopup.$CALL_TYPE, "CONFIRM");
+                intent.putExtra(ViewPopup.LA_T, String.valueOf(marker.getPosition().latitude));
+                intent.putExtra(ViewPopup.LN_G, String.valueOf(marker.getPosition().longitude));
+                startActivity(intent);
+            }
+        });
     }
 
     @Override

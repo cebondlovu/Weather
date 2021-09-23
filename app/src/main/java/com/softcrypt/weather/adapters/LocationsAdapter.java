@@ -2,6 +2,7 @@ package com.softcrypt.weather.adapters;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
+import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -11,22 +12,18 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.softcrypt.weather.base.BaseApplication;
-import com.softcrypt.weather.database.LocationsDatabaseHelper;
 import com.softcrypt.weather.models.ItemLocation;
 import com.softcrypt.weather.R;
-import com.softcrypt.weather.utils.ViewPopup;
+import com.softcrypt.weather.views.ViewPopup;
 
 import java.util.ArrayList;
 
 public class LocationsAdapter extends RecyclerView.Adapter<LocationsAdapter.MyViewHolder> {
 
-    BaseApplication context;
+    Context context;
     ArrayList<ItemLocation> list;
-    LocationsDatabaseHelper dbHelper;
-    ViewPopup popup = new ViewPopup();
 
-    public LocationsAdapter(BaseApplication context, ArrayList<ItemLocation> list) {
+    public LocationsAdapter(Context context, ArrayList<ItemLocation> list) {
         this.context = context;
         this.list = list;
     }
@@ -41,16 +38,18 @@ public class LocationsAdapter extends RecyclerView.Adapter<LocationsAdapter.MyVi
 
     @Override
     public void onBindViewHolder(@NonNull final MyViewHolder holder, @SuppressLint("RecyclerView") final int position) {
+
         holder.txt_name.setText(new StringBuilder(list.get(position).getName()));
         holder.txt_lat.setText(new StringBuilder("[ ").append(list.get(position).getLat()).append(" ]").toString());
         holder.txt_lon.setText(new StringBuilder("[ ").append(list.get(position).getLng()).append(" ]").toString());
-        holder.del_img.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                popup.deleteItem(list.get(position).getUniqueID(),list.get(position).getName(),
-                        (BaseApplication) view.getContext().getApplicationContext());
-                notifyDataSetChanged();
-            }
+        holder.del_img.setImageResource(R.drawable.ic_baseline_delete_forever_24);
+        holder.del_img.setOnClickListener(view -> {
+            Intent intent = new Intent(context, ViewPopup.class);
+            intent.putExtra(ViewPopup.$CALL_TYPE, "DELETE");
+            intent.putExtra(ViewPopup.UNIQUE_ID, list.get(position).getUniqueId());
+            intent.putExtra(ViewPopup.NAME, list.get(position).getName());
+            context.startActivity(intent);
+            notifyDataSetChanged();
         });
     }
 
@@ -62,7 +61,7 @@ public class LocationsAdapter extends RecyclerView.Adapter<LocationsAdapter.MyVi
     public static class MyViewHolder extends RecyclerView.ViewHolder {
 
         TextView txt_name,txt_lat,txt_lon;
-        ImageView del_img;
+        ImageView del_img, loc_img;
 
         public MyViewHolder(@NonNull View itemView) {
             super(itemView);
@@ -71,6 +70,7 @@ public class LocationsAdapter extends RecyclerView.Adapter<LocationsAdapter.MyVi
             txt_lat = itemView.findViewById(R.id.txt_lat);
             txt_lon = itemView.findViewById(R.id.txt_lon);
             del_img = itemView.findViewById(R.id.del_img);
+            loc_img = itemView.findViewById(R.id.imageView);
         }
     }
 }

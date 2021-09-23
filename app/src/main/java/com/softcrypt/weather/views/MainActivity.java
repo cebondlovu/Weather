@@ -35,7 +35,9 @@ import com.karumi.dexter.listener.multi.MultiplePermissionsListener;
 import com.softcrypt.weather.adapters.ViewPagerAdapter;
 import com.softcrypt.weather.base.BaseApplication;
 import com.softcrypt.weather.common.Common;
+import com.softcrypt.weather.common.MarshMellowPermission;
 import com.softcrypt.weather.viewModels.MainViewModel;
+import com.softcrypt.weather.viewModels.MapsViewModel;
 import com.softcrypt.weather.views.fragments.CitiesFrag;
 import com.softcrypt.weather.views.fragments.ForecastFrag;
 import com.softcrypt.weather.views.fragments.TodayWeatherFrag;
@@ -44,6 +46,8 @@ import com.softcrypt.weather.R;
 import java.util.List;
 
 import javax.inject.Inject;
+
+import io.realm.Realm;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -54,6 +58,7 @@ public class MainActivity extends AppCompatActivity {
     @Inject
     ViewModelProvider.Factory viewModelFactory;
     private MainViewModel mainViewModel;
+    private MapsViewModel mapsViewModel;
 
     private ConstraintLayout constraintLayout;
 
@@ -66,6 +71,7 @@ public class MainActivity extends AppCompatActivity {
         super.onStart();
         mainViewModel = new ViewModelProvider(this, viewModelFactory)
                 .get(MainViewModel.class);
+        mapsViewModel = new MapsViewModel((BaseApplication) this.getApplication(), Realm.getDefaultInstance());
     }
 
     @Override
@@ -73,6 +79,7 @@ public class MainActivity extends AppCompatActivity {
         super.onResume();
         mainViewModel = new ViewModelProvider(this, viewModelFactory)
                 .get(MainViewModel.class);
+        mapsViewModel = new MapsViewModel((BaseApplication) this.getApplication(), Realm.getDefaultInstance());
     }
 
     @Override
@@ -80,6 +87,7 @@ public class MainActivity extends AppCompatActivity {
         super.onRestart();
         mainViewModel = new ViewModelProvider(this, viewModelFactory)
                 .get(MainViewModel.class);
+        mapsViewModel = new MapsViewModel((BaseApplication) this.getApplication(), Realm.getDefaultInstance());
     }
 
     @Override
@@ -169,7 +177,7 @@ public class MainActivity extends AppCompatActivity {
 
     private void setupViewPager(ViewPager viewPager) {
         ViewPagerAdapter adapter = new ViewPagerAdapter(getSupportFragmentManager(), FragmentPagerAdapter.BEHAVIOR_RESUME_ONLY_CURRENT_FRAGMENT);
-        adapter.addFragment(new TodayWeatherFrag(mainViewModel),"Today");
+        adapter.addFragment(new TodayWeatherFrag(mainViewModel, mapsViewModel),"Today");
         adapter.addFragment(new ForecastFrag(mainViewModel),"Days");
         adapter.addFragment(new CitiesFrag(mainViewModel), "City");
         viewPager.setAdapter(adapter);

@@ -18,10 +18,13 @@ import com.softcrypt.weather.database.LocationsDatabaseHelper;
 import com.softcrypt.weather.models.ItemLocation;
 import com.softcrypt.weather.R;
 import com.softcrypt.weather.models.WeatherResult;
+import com.softcrypt.weather.viewModels.LocationsViewModel;
 import com.softcrypt.weather.viewModels.MainViewModel;
+import com.softcrypt.weather.viewModels.MapsViewModel;
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
+import java.util.UUID;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -31,6 +34,7 @@ import java.util.ArrayList;
 public class TodayWeatherFrag extends Fragment {
 
     private static MainViewModel mainViewModel;
+    private static MapsViewModel mapsViewModel;
     ImageView img_weather;
     TextView txt_city_name,
              txt_humidity,
@@ -52,12 +56,13 @@ public class TodayWeatherFrag extends Fragment {
 
     public static TodayWeatherFrag getInstance(){
         if(instance == null)
-            instance = new TodayWeatherFrag(mainViewModel);
+            instance = new TodayWeatherFrag(mainViewModel, mapsViewModel);
         return instance;
     }
 
-    public TodayWeatherFrag(MainViewModel mainViewModel) {
+    public TodayWeatherFrag(MainViewModel mainViewModel, MapsViewModel mapsViewModel) {
         TodayWeatherFrag.mainViewModel = mainViewModel;
+        TodayWeatherFrag.mapsViewModel = mapsViewModel;
     }
 
     @Override
@@ -97,6 +102,13 @@ public class TodayWeatherFrag extends Fragment {
 
                     @Override
                     public void onChanged(WeatherResult weatherResult) {
+                        mapsViewModel.insertLocationMutableLivData( new ItemLocation(
+                                1,
+                                UUID.randomUUID().toString(),
+                                weatherResult.getName(),
+                                String.valueOf(weatherResult.getCoord().getLon()),
+                                String.valueOf(weatherResult.getCoord().getLat())
+                        ));
                         Picasso.get().load(new StringBuilder("https://openweathermap.org/img/w/")
                                 .append(weatherResult.getWeather().get(0).getIcon())
                                 .append(".png").toString()).into(img_weather);

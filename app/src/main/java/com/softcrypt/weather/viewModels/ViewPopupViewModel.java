@@ -22,16 +22,17 @@ import io.reactivex.observers.DisposableSingleObserver;
 import io.reactivex.schedulers.Schedulers;
 import io.realm.Realm;
 
-public class LocationsViewModel extends AndroidViewModel {
+public class ViewPopupViewModel  extends AndroidViewModel {
 
-    private final LocationDatabaseRepository locationDatabaseRepository;
+    private LocationDatabaseRepository locationDatabaseRepository;
     private final CompositeDisposable disposable = new CompositeDisposable();
     private final MutableLiveData<ArrayList<ItemLocation>> modelAllLocMutableLivData = new MutableLiveData<>();
-    private final MutableLiveData<Boolean> modelDeleteAllMutableLivData = new MutableLiveData<>();
+    private final MutableLiveData<Boolean> modelInsertLocMutableLivData = new MutableLiveData<>();
+    private final MutableLiveData<Boolean> modelDeletePlaceMutableLivData = new MutableLiveData<>();
 
-    public LocationsViewModel(BaseApplication application, Realm realm){
+    public ViewPopupViewModel(BaseApplication application, Realm realm) {
         super(application);
-        this.locationDatabaseRepository = new LocationDatabaseRepository(application,realm);
+        this.locationDatabaseRepository = new LocationDatabaseRepository(application, realm);
     }
 
     public MutableLiveData<ArrayList<ItemLocation>> getAllLocationsMutableLivData() {
@@ -39,20 +40,25 @@ public class LocationsViewModel extends AndroidViewModel {
         return modelAllLocMutableLivData;
     }
 
-    public void deleteAllMutableLivData() {
-        deleteAllLocations();
+    public void insertLocationMutableLivData(ItemLocation itemLocation) {
+        insertLocation(itemLocation);
+        //return modelInsertLocationMutableLivData;
+    }
+
+    public void deleteLocationMutableLivData(String uniqueId) {
+        deleteLocation(uniqueId);
+        //return modelInsertLocationMutableLivData;
+    }
+
+    private void deleteLocation(String uniqueId) {
+        locationDatabaseRepository.modelDeleteLocation(uniqueId);
     }
 
     private void getAllUserLocations() {
-        modelAllLocMutableLivData.setValue(locationDatabaseRepository.modelGetAllLocations());
+        locationDatabaseRepository.modelGetAllLocations();
     }
 
-    private void deleteAllLocations(){
-        locationDatabaseRepository.modelDeleteAllLocations();
-    }
-
-    public void clearDisposable(){
-        if(disposable != null)
-            disposable.clear();
+    private void insertLocation(ItemLocation itemLocation) {
+        locationDatabaseRepository.modelInsertLocation(itemLocation);
     }
 }
