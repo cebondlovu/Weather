@@ -4,6 +4,7 @@ import android.app.Dialog;
 import android.os.Environment;
 import android.widget.Toast;
 
+import com.afollestad.materialdialogs.MaterialDialog;
 import com.softcrypt.weather.base.BaseApplication;
 import com.softcrypt.weather.models.ItemLocation;
 
@@ -94,13 +95,12 @@ public class LocationsDatabaseHelper {
         exportRealmFile.delete();
         realm.writeCopyTo(exportRealmFile);
         String msg = "File exported to Path: " + EXPORT_REALM_PATH + "/" + EXPORT_DATABASE_NAME;
-        Toast.makeText(context, "Done", Toast.LENGTH_LONG).show();
-
+        Toast.makeText(context,msg,Toast.LENGTH_LONG).show();
     }
 
     public void restore(String restoreFilePath){
         copyBundledRealmFile(restoreFilePath, IMPORT_DATABASE_NAME);
-        Toast.makeText(context, "Restored", Toast.LENGTH_LONG).show();
+        Toast.makeText(context,"Done",Toast.LENGTH_LONG).show();
 
 
     }

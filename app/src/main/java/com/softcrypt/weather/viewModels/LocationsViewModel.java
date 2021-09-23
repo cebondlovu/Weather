@@ -1,25 +1,16 @@
 package com.softcrypt.weather.viewModels;
 
-import android.app.Application;
-
-import androidx.annotation.NonNull;
 import androidx.lifecycle.AndroidViewModel;
 import androidx.lifecycle.MutableLiveData;
-import androidx.lifecycle.ViewModel;
 
+import com.afollestad.materialdialogs.folderselector.FileChooserDialog;
 import com.softcrypt.weather.base.BaseApplication;
-import com.softcrypt.weather.database.LocationsDatabaseHelper;
 import com.softcrypt.weather.models.ItemLocation;
 import com.softcrypt.weather.repository.LocationDatabaseRepository;
 
 import java.util.ArrayList;
 
-import javax.inject.Inject;
-
-import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.CompositeDisposable;
-import io.reactivex.observers.DisposableSingleObserver;
-import io.reactivex.schedulers.Schedulers;
 import io.realm.Realm;
 
 public class LocationsViewModel extends AndroidViewModel {
@@ -50,6 +41,8 @@ public class LocationsViewModel extends AndroidViewModel {
     private void deleteAllLocations(){
         locationDatabaseRepository.modelDeleteAllLocations();
     }
+
+
 
     public void clearDisposable(){
         if(disposable != null)

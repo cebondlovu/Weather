@@ -38,7 +38,7 @@
                 android:textStyle="bold" />
 
             <ImageView
-                android:id="@+id/import_img"
+                android:id="@+id/image"
                 android:layout_width="40dp"
                 android:layout_height="40dp"
                 android:layout_marginStart="2dp"
@@ -47,6 +47,7 @@
                 android:layout_marginBottom="2dp"
                 android:layout_toLeftOf="@+id/backup_img"
                 android:padding="4dp"
+                android:onClick="importStart"
                 android:src="@drawable/ic_baseline_import_export_24" />
 
             <ImageView
@@ -59,6 +60,7 @@
                 android:layout_marginEnd="20dp"
                 android:layout_marginBottom="2dp"
                 android:padding="4dp"
+                android:onClick="backupStart"
                 android:src="@drawable/ic_baseline_backup_24" />
         </RelativeLayout>
     </androidx.appcompat.widget.Toolbar>

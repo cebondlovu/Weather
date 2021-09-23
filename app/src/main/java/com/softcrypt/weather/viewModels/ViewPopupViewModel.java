@@ -40,14 +40,20 @@ public class ViewPopupViewModel  extends AndroidViewModel {
         return modelAllLocMutableLivData;
     }
 
+    public void importRealFileMutableLivData(String filePath){
+        importRealmFile(filePath);
+    }
+
+    public void backupRealFileMutableLivData() {
+        backupRealmFile();
+    }
+
     public void insertLocationMutableLivData(ItemLocation itemLocation) {
         insertLocation(itemLocation);
-        //return modelInsertLocationMutableLivData;
     }
 
     public void deleteLocationMutableLivData(String uniqueId) {
         deleteLocation(uniqueId);
-        //return modelInsertLocationMutableLivData;
     }
 
     private void deleteLocation(String uniqueId) {
@@ -60,5 +66,13 @@ public class ViewPopupViewModel  extends AndroidViewModel {
 
     private void insertLocation(ItemLocation itemLocation) {
         locationDatabaseRepository.modelInsertLocation(itemLocation);
+    }
+
+    private void importRealmFile(String filePath) {
+        locationDatabaseRepository.modelRestore(filePath);
+    }
+
+    private void backupRealmFile() {
+        locationDatabaseRepository.modelBackup();
     }
 }

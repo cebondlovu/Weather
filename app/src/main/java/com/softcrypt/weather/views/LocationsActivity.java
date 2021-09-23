@@ -3,7 +3,6 @@ package com.softcrypt.weather.views;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
-import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -15,17 +14,15 @@ import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.afollestad.materialdialogs.folderselector.FileChooserDialog;
 import com.softcrypt.weather.adapters.LocationsAdapter;
 import com.softcrypt.weather.base.BaseApplication;
 import com.softcrypt.weather.R;
 import com.softcrypt.weather.common.MarshMellowPermission;
 import com.softcrypt.weather.viewModels.LocationsViewModel;
-import com.softcrypt.weather.viewModels.MainViewModel;
-import com.softcrypt.weather.viewModels.MapsViewModel;
 
+import java.io.File;
 import java.util.Objects;
-
-import javax.inject.Inject;
 
 import io.realm.Realm;
 
@@ -37,7 +34,6 @@ public class LocationsActivity extends AppCompatActivity {
     Toolbar toolbar;
 
     private LocationsViewModel locationsViewModel;
-    private MarshMellowPermission permission;
 
     @Override
     protected void onStart() {
@@ -71,7 +67,6 @@ public class LocationsActivity extends AppCompatActivity {
         setContentView(R.layout.activity_locations);
         ((BaseApplication) getApplication()).getAppComponent().injectLocationsAct(this);
         locationsViewModel = new LocationsViewModel((BaseApplication) this.getApplication(), Realm.getDefaultInstance());
-        permission = new MarshMellowPermission(this);
 
         toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
@@ -154,5 +149,17 @@ public class LocationsActivity extends AppCompatActivity {
                 Toast.makeText(view.getContext(), "Too Many Locations", Toast.LENGTH_LONG).show();
             }
         });
+    }
+
+    public void importStart(View view) {
+        Intent intent = new Intent(this, ViewPopup.class);
+        intent.putExtra(ViewPopup.$CALL_TYPE, "IMPORT");
+        startActivity(intent);
+    }
+
+    public void backupStart(View view) {
+        Intent intent = new Intent(this, ViewPopup.class);
+        intent.putExtra(ViewPopup.$CALL_TYPE, "BACKUP");
+        startActivity(intent);
     }
 }

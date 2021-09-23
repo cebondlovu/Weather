@@ -15,21 +15,27 @@ import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.lifecycle.LifecycleOwner;
 
+import com.afollestad.materialdialogs.DialogAction;
+import com.afollestad.materialdialogs.MaterialDialog;
+import com.afollestad.materialdialogs.folderselector.FileChooserDialog;
 import com.softcrypt.weather.base.BaseApplication;
+import com.softcrypt.weather.common.MarshMellowPermission;
 import com.softcrypt.weather.database.LocationsDatabaseHelper;
 import com.softcrypt.weather.models.ItemLocation;
 import com.softcrypt.weather.R;
 import com.softcrypt.weather.viewModels.ViewPopupViewModel;
 
+import java.io.File;
 import java.util.UUID;
 
 import io.realm.Realm;
 
-public class ViewPopup extends AppCompatActivity {
+public class ViewPopup extends AppCompatActivity implements FileChooserDialog.FileCallback {
 
     public static final String $CALL_TYPE = "CALL_TYPE";
 
@@ -39,6 +45,8 @@ public class ViewPopup extends AppCompatActivity {
     public static final String UNIQUE_ID = "UNIQUE_ID";
 
     private ViewPopupViewModel viewPopupViewModel;
+    private MarshMellowPermission permission;
+
 
     @Override
     protected void onStart() {
@@ -51,6 +59,7 @@ public class ViewPopup extends AppCompatActivity {
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         ((BaseApplication) getApplication()).getAppComponent().injectViewPopup(this);
+        permission = new MarshMellowPermission(this);
         viewPopupViewModel = new ViewPopupViewModel((BaseApplication) this.getApplication(),
                 Realm.getDefaultInstance());
 
@@ -63,6 +72,11 @@ public class ViewPopup extends AppCompatActivity {
             case "DELETE":
                 deleteItem(intent.getStringExtra(UNIQUE_ID), intent.getStringExtra(NAME));
                 break;
+            case "BACKUP":
+                backupRealmFile();
+                break;
+            case "IMPORT":
+                importRealmFile();
         }
     }
 
@@ -140,5 +154,41 @@ public class ViewPopup extends AppCompatActivity {
 
         dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
         dialog.show();
+    }
+
+    public void importRealmFile() {
+        if (!permission.checkPermissionForExternalStorage())
+            permission.requestPermissionForExternalStorage();
+        if (permission.checkPermissionForExternalStorage())
+            new FileChooserDialog.Builder(ViewPopup.this)
+                    .initialPath("/sdcard/Download")
+                    .extensionsFilter(".realm")
+                    .tag("Select Data File")
+                    .goUpLabel("Up")
+                    .show();
+    }
+
+    public void backupRealmFile() {
+        if (!permission.checkPermissionForExternalStorage())
+            permission.requestPermissionForExternalStorage();
+        if (permission.checkPermissionForExternalStorage()) {
+            viewPopupViewModel.backupRealFileMutableLivData();
+            MaterialDialog dialog = new MaterialDialog.Builder(ViewPopup.this)
+                    .title("Done")
+                    .content("backup-Up to Downloads Folder")
+                    .positiveText("Ok").onPositive(new MaterialDialog.SingleButtonCallback() {
+                        @Override
+                        public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
+                            finish();
+                        }
+                    }).show();
+        }
+
+    }
+
+    @Override
+    public void onFileSelection(@NonNull FileChooserDialog dialog, @NonNull File file) {
+        viewPopupViewModel.importRealFileMutableLivData(file.getPath());
+        finish();
     }
 }

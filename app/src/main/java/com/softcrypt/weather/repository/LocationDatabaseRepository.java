@@ -48,4 +48,12 @@ public class LocationDatabaseRepository {
     public int modelGetLocationsCount(){
         return locationsDatabaseHelper.getLocationsCount();
     }
+
+    public void modelRestore(String filePath) {
+        locationsDatabaseHelper.restore(filePath);
+    }
+
+    public void modelBackup() {
+        locationsDatabaseHelper.backup();
+    }
 }
