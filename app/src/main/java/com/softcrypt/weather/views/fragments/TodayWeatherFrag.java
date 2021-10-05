@@ -13,30 +13,26 @@ import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
+import com.softcrypt.weather.base.BaseApplication;
 import com.softcrypt.weather.common.Common;
-import com.softcrypt.weather.database.LocationsDatabaseHelper;
 import com.softcrypt.weather.models.ItemLocation;
 import com.softcrypt.weather.R;
 import com.softcrypt.weather.models.WeatherResult;
-import com.softcrypt.weather.viewModels.LocationsViewModel;
+import com.softcrypt.weather.repository.OpenWeatherRepository;
 import com.softcrypt.weather.viewModels.MainViewModel;
 import com.softcrypt.weather.viewModels.MapsViewModel;
 import com.squareup.picasso.Picasso;
 
-import java.util.ArrayList;
 import java.util.UUID;
 
-/**
- * A simple {@link Fragment} subclass.
- * Use the {@link TodayWeatherFrag#getInstance} factory method to
- * create an instance of this fragment.
- */
+import io.realm.Realm;
+
 public class TodayWeatherFrag extends Fragment {
 
     private static MainViewModel mainViewModel;
     private static MapsViewModel mapsViewModel;
-    ImageView img_weather;
-    TextView txt_city_name,
+    private ImageView img_weather;
+    private TextView txt_city_name,
              txt_humidity,
              txt_sunrise,
              txt_sunset,
@@ -46,28 +42,13 @@ public class TodayWeatherFrag extends Fragment {
              txt_date_time,
              txt_wind,
              txt_geo_coord;
-    LinearLayout weather_panel;
-    ProgressBar loading;
-
-    LocationsDatabaseHelper dbHelper;
-    ArrayList<ItemLocation> myList;
-
-    static TodayWeatherFrag instance;
-
-    public static TodayWeatherFrag getInstance(){
-        if(instance == null)
-            instance = new TodayWeatherFrag(mainViewModel, mapsViewModel);
-        return instance;
-    }
+    private LinearLayout weather_panel;
+    private ProgressBar loading;
+    private String location;
 
     public TodayWeatherFrag(MainViewModel mainViewModel, MapsViewModel mapsViewModel) {
-        TodayWeatherFrag.mainViewModel = mainViewModel;
-        TodayWeatherFrag.mapsViewModel = mapsViewModel;
-    }
-
-    @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
+        this.mainViewModel = mainViewModel;
+        this.mapsViewModel = mapsViewModel;
     }
 
     @Override

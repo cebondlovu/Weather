@@ -7,17 +7,36 @@
     android:orientation="horizontal"
     android:background="@color/colorPrimaryDark"
     tools:context=".views.fragments.TodayWeatherFrag">
+    <com.google.android.material.appbar.AppBarLayout
+        android:id="@+id/bar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+        <androidx.appcompat.widget.Toolbar
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/toolbar">
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Today's Weather"
+                android:textStyle="bold"
+                android:textSize="18sp"
+                android:textColor="@color/white"
+                android:layout_gravity="center"/>
+        </androidx.appcompat.widget.Toolbar>
+    </com.google.android.material.appbar.AppBarLayout>
 
     <LinearLayout
         android:id="@+id/weather_panel"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="10dp"
-        android:layout_marginStart="15dp"
-        android:layout_marginEnd="15dp"
+        android:layout_margin="15dp"
         android:orientation="vertical"
         android:visibility="gone"
-        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/bar"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent">
 
@@ -25,6 +44,7 @@
             android:id="@+id/txt_city_name"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_gravity="center"
             android:text="Weather In Brynston, JB"
             android:textColor="@color/colorPrimary"
             android:textSize="20sp"
@@ -33,12 +53,14 @@
         <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_marginTop="10dp"
             android:orientation="horizontal">
 
             <ImageView
                 android:id="@+id/img_weather"
-                android:layout_width="60dp"
-                android:layout_height="60dp"
+                android:layout_width="50dp"
+                android:layout_height="50dp"
                 tools:srcCompat="@tools:sample/avatars" />
             <TextView
                 android:id="@+id/txt_temperature"
@@ -47,14 +69,16 @@
                 android:textColor="@color/colorAlt"
                 android:text="14 C"
                 android:textStyle="bold"
-                android:textSize="30sp"/>
+                android:textSize="35sp"/>
         </LinearLayout>
 
         <TextView
             android:id="@+id/txt_description"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
             android:text="Weather In Brynston, JB"
+            android:layout_gravity="center"
             android:textColor="@color/colorSubText"
             android:textSize="18sp"
             android:textStyle="bold"/>
@@ -63,6 +87,7 @@
             android:id="@+id/txt_date_time"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_gravity="center"
             android:text="Weather In Brynston, JB"
             android:textColor="@color/colorSubText"
             android:textSize="16sp"/>
@@ -71,6 +96,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:background="@drawable/border"
+            android:layout_gravity="center"
             android:layout_marginTop="10dp"
             android:stretchColumns="*"
             android:padding="16dp">

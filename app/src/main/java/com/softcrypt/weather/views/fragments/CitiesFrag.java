@@ -17,6 +17,7 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.mancj.materialsearchbar.MaterialSearchBar;
+import com.softcrypt.weather.base.BaseApplication;
 import com.softcrypt.weather.common.Common;
 import com.softcrypt.weather.R;
 import com.softcrypt.weather.viewModels.MainViewModel;
@@ -27,11 +28,6 @@ import com.squareup.picasso.Picasso;
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * A simple {@link Fragment} subclass.
- * Use the {@link CitiesFrag#getInstance} factory method to
- * create an instance of this fragment.
- */
 public class CitiesFrag extends Fragment {
 
     private static MainViewModel mainViewModel;
@@ -54,16 +50,9 @@ public class CitiesFrag extends Fragment {
     ProgressBar loading;
     private String latitude, longitude;
 
-    static CitiesFrag instance;
 
     public CitiesFrag(MainViewModel mainViewModel) {
-        CitiesFrag.mainViewModel = mainViewModel;
-    }
-
-    public static CitiesFrag getInstance() {
-        if(instance == null)
-            instance = new CitiesFrag(mainViewModel);
-        return instance;
+        this.mainViewModel = mainViewModel;
     }
 
     @Override
@@ -122,16 +111,11 @@ public class CitiesFrag extends Fragment {
 
             @Override
             public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-                List<String> suggest = new ArrayList<>();
-                for (String city : lstCities) {
-                    if (city.toLowerCase().contains(searchBar.getText().toLowerCase()))
-                        suggest.add(city);
-                }
-                searchBar.setLastSuggestions(suggest);
             }
 
             @Override
             public void afterTextChanged(Editable editable) {
+                filter(editable.toString());
             }
         });
 
@@ -157,6 +141,17 @@ public class CitiesFrag extends Fragment {
 
         loading.setVisibility(View.GONE);
 
+    }
+
+    private void filter (String text) {
+        List<String> suggest = new ArrayList<>();
+
+        for (String s : MainActivity.list) {
+            if(s.toLowerCase().contains(text.toLowerCase())) {
+                suggest.add(s);
+            }
+        }
+        searchBar.setLastSuggestions(suggest);
     }
 
     private void getWeatherInformation(String cityName) {

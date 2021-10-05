@@ -14,19 +14,14 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.softcrypt.weather.adapters.WeatherForecastAdapter;
+import com.softcrypt.weather.base.BaseApplication;
 import com.softcrypt.weather.common.Common;
 import com.softcrypt.weather.models.WeatherForecastResult;
 import com.softcrypt.weather.R;
-import com.softcrypt.weather.remote.IOpenWeatherAPI;
 import com.softcrypt.weather.viewModels.MainViewModel;
 
-import io.reactivex.disposables.CompositeDisposable;
+import io.realm.Realm;
 
-/**
- * A simple {@link Fragment} subclass.
- * Use the {@link ForecastFrag#getInstance} factory method to
- * create an instance of this fragment.
- */
 public class ForecastFrag extends Fragment {
 
     private static MainViewModel mainViewModel;
@@ -35,27 +30,20 @@ public class ForecastFrag extends Fragment {
     RecyclerView recycler_forecast;
     LinearLayout main_info;
 
-    static ForecastFrag instance;
-
     public ForecastFrag(MainViewModel mainViewModel) {
-        ForecastFrag.mainViewModel = mainViewModel;
-    }
-
-    public static ForecastFrag getInstance() {
-            if(instance == null)
-                instance = new ForecastFrag(mainViewModel);
-        return instance;
+        this.mainViewModel = mainViewModel;
     }
 
     @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
+    public void onDestroy() {
+        super.onDestroy();
+
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,Bundle savedInstanceState) {
-        //
         View itemView = inflater.inflate(R.layout.fragment_forecast, container, false);
+
         main_info = itemView.findViewById(R.id.main_info);
         txt_city_name = itemView.findViewById(R.id.txt_city_name);
         txt_geo_coord = itemView.findViewById(R.id.txt_geo_coord);
@@ -77,12 +65,9 @@ public class ForecastFrag extends Fragment {
 
                     @Override
                     public void onChanged(WeatherForecastResult weatherForecastResult) {
-                        if(weatherForecastResult == null){
-                            main_info.setVisibility(View.INVISIBLE);
-                        } else {
-                            main_info.setVisibility(View.VISIBLE);
+                        if (weatherForecastResult != null)
                             displayForecastWeather(weatherForecastResult);
-                        }
+
                     }
                 });
     }

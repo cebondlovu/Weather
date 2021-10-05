@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item android:id="@+id/nav_today"
+        android:icon="@drawable/ic_baseline_today_24"
+        android:title=""/>
+    <item android:id="@+id/nav_days"
+        android:icon="@drawable/ic_baseline_calendar_today_24"
+        android:title=""/>
+    <item android:id="@+id/nav_city"
+        android:icon="@drawable/ic_baseline_location_city_24"
+        android:title=""/>
+    <item android:id="@+id/nav_add"
+        android:icon="@drawable/ic_baseline_add_box_24"
+        android:title=""/>
+</menu>

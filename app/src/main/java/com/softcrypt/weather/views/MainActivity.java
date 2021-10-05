@@ -5,6 +5,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.core.app.ActivityCompat;
+import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentPagerAdapter;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.viewpager.widget.ViewPager;
@@ -25,6 +26,7 @@ import com.google.android.gms.location.LocationCallback;
 import com.google.android.gms.location.LocationRequest;
 import com.google.android.gms.location.LocationResult;
 import com.google.android.gms.location.LocationServices;
+import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.snackbar.Snackbar;
 import com.google.android.material.tabs.TabLayout;
 import com.karumi.dexter.Dexter;
@@ -55,6 +57,10 @@ public class MainActivity extends AppCompatActivity {
     private Toolbar toolbar;
     private TabLayout tabLayout;
     private ViewPager viewPager;
+
+    private BottomNavigationView bottomNavigationView;
+    private Fragment selectorFragment;
+
     public static String GLOBAL_LIST = "gList";
     public static List<String> list;
 
@@ -63,18 +69,10 @@ public class MainActivity extends AppCompatActivity {
     private MainViewModel mainViewModel;
     private MapsViewModel mapsViewModel;
 
-    private ConstraintLayout constraintLayout;
-
-    private FusedLocationProviderClient fusedLocationProviderClient;
-    private LocationCallback locationCallback;
-    private LocationRequest locationRequest;
-
     @Override
-    protected void onStart() {
-        super.onStart();
-        mainViewModel = new ViewModelProvider(this, viewModelFactory)
-                .get(MainViewModel.class);
-        mapsViewModel = new MapsViewModel((BaseApplication) this.getApplication(), Realm.getDefaultInstance());
+    protected void onDestroy() {
+        super.onDestroy();
+        mainViewModel.clearDisposable();
     }
 
     @Override
@@ -94,111 +92,49 @@ public class MainActivity extends AppCompatActivity {
     }
 
     @Override
-    protected void onPause() {
-        super.onPause();
-        //mainViewModel.clearDisposable();
-    }
-
-    @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         ((BaseApplication) getApplication()).getAppComponent().injectMainAct(this);
-        constraintLayout = findViewById(R.id.root_view);
-        toolbar = findViewById(R.id.toolbar);
 
-        setSupportActionBar(toolbar);
+        mainViewModel = new ViewModelProvider(this, viewModelFactory)
+                .get(MainViewModel.class);
+        mapsViewModel = new MapsViewModel((BaseApplication) this.getApplication(), Realm.getDefaultInstance());
 
-        getNetworkProviderState();
 
-        Dexter.withActivity(this)
-                .withPermissions(Manifest.permission.ACCESS_COARSE_LOCATION,
-                        Manifest.permission.ACCESS_FINE_LOCATION,
-                        Manifest.permission.READ_PHONE_STATE,
-                        Manifest.permission.READ_EXTERNAL_STORAGE,
-                        Manifest.permission.WRITE_EXTERNAL_STORAGE)
-                .withListener(new MultiplePermissionsListener() {
-                    @Override
-                    public void onPermissionsChecked(MultiplePermissionsReport report) {
-                        if (report.areAllPermissionsGranted()) {
-
-                            buildLocationRequest();
-                            buildLocationCallBack();
-
-                            if (ActivityCompat.checkSelfPermission(
-                                    MainActivity.this, Manifest.permission.ACCESS_FINE_LOCATION) !=
-                                    PackageManager.PERMISSION_GRANTED &&
-                                    ActivityCompat.checkSelfPermission(MainActivity.this,
-                                            Manifest.permission.ACCESS_COARSE_LOCATION) !=
-                                            PackageManager.PERMISSION_GRANTED) {
-
-                                return;
-                            }
-
-                            fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(MainActivity.this);
-                            fusedLocationProviderClient.requestLocationUpdates(locationRequest, locationCallback,
-                                    Looper.myLooper());
-                        }
-
-                    }
-
-                    @Override
-                    public void onPermissionRationaleShouldBeShown(List<PermissionRequest> permissions, PermissionToken token) {
-                        Snackbar.make(constraintLayout, "Permissions Denied", Snackbar.LENGTH_LONG)
-                                .show();
-                    }
-                }).check();
 
         list = new ArrayList<>();
         list = Common.globalCityList;
-    }
-
-    private void getNetworkProviderState() {
-        TelephonyManager manager = (TelephonyManager) getSystemService(Context.TELEPHONY_SERVICE);
-    }
-
-    private void buildLocationCallBack() {
-        locationCallback = new LocationCallback(){
-            @Override
-            public void onLocationResult(@NonNull LocationResult locationResult) {
-                super.onLocationResult(locationResult);
-
-                Common.current_location = locationResult.getLastLocation();
-
-                viewPager = findViewById(R.id.view_pager);
-                setupViewPager(viewPager);
-                tabLayout = findViewById(R.id.tabs);
-                tabLayout.setupWithViewPager(viewPager);
-
-                Log.d("Location", locationResult.getLastLocation().getLongitude()+"/"+
-                        locationResult.getLastLocation().getLatitude());
+        bottomNavigationView = findViewById(R.id.bottom_navigation);
+        bottomNavigationView.setOnItemSelectedListener(item -> {
+            switch (item.getItemId()) {
+                case R.id.nav_today:
+                    selectorFragment = new TodayWeatherFrag(mainViewModel, mapsViewModel);
+                    break;
+                case R.id.nav_days:
+                    selectorFragment = new ForecastFrag(mainViewModel);
+                    break;
+                case R.id.nav_city:
+                    selectorFragment = new CitiesFrag(mainViewModel);
+                    break;
+                case R.id.nav_add:
+                    selectorFragment = null;
+                    startActivity(new Intent(this, LocationsActivity.class));
+                    break;
             }
 
-            @Override
-            public void onLocationAvailability(@NonNull LocationAvailability locationAvailability) {
-                super.onLocationAvailability(locationAvailability);
+            if (selectorFragment != null) {
+                getSupportFragmentManager().beginTransaction()
+                        .replace(R.id.fragment_container, selectorFragment).commit();
             }
-        };
+
+            return true;
+        });
+
+        getSupportFragmentManager().beginTransaction()
+                .replace(R.id.fragment_container, new TodayWeatherFrag(mainViewModel, mapsViewModel)).commit();
+        bottomNavigationView.setSelectedItemId(R.id.nav_today);
     }
 
-    private void setupViewPager(ViewPager viewPager) {
-        ViewPagerAdapter adapter = new ViewPagerAdapter(getSupportFragmentManager(), FragmentPagerAdapter.BEHAVIOR_RESUME_ONLY_CURRENT_FRAGMENT);
-        adapter.addFragment(new TodayWeatherFrag(mainViewModel, mapsViewModel),"Today");
-        adapter.addFragment(new ForecastFrag(mainViewModel),"Days");
-        adapter.addFragment(new CitiesFrag(mainViewModel), "City");
-        viewPager.setAdapter(adapter);
-    }
 
-    private void buildLocationRequest() {
-
-        locationRequest = new LocationRequest();
-        locationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
-        locationRequest.setInterval(5000);
-        locationRequest.setFastestInterval(3000);
-        locationRequest.setSmallestDisplacement(10.0f);
-    }
-
-    public void goToAddLocationAct(View view) {
-        startActivity(new Intent(this, LocationsActivity.class));
-    }
 }

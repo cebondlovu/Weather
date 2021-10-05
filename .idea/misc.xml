@@ -8,6 +8,7 @@
         <entry key="app/src/main/res/drawable/cell.xml" value="0.22760416666666666" />
         <entry key="app/src/main/res/drawable/edit_text_bg.xml" value="0.22760416666666666" />
         <entry key="app/src/main/res/drawable/ic_baseline_add_box_24.xml" value="0.22760416666666666" />
+        <entry key="app/src/main/res/drawable/ic_baseline_calendar_today_24.xml" value="0.14375" />
         <entry key="app/src/main/res/drawable/ic_baseline_cloud_24.xml" value="0.22760416666666666" />
         <entry key="app/src/main/res/drawable/ic_baseline_delete_forever_24.xml" value="0.22760416666666666" />
         <entry key="app/src/main/res/drawable/ic_baseline_location_on_24.xml" value="0.22760416666666666" />
@@ -15,7 +16,7 @@
         <entry key="app/src/main/res/drawable/red_button.xml" value="0.22760416666666666" />
         <entry key="app/src/main/res/drawable/translucent_shadow.xml" value="0.22760416666666666" />
         <entry key="app/src/main/res/layout/activity_locations.xml" value="0.21145833333333333" />
-        <entry key="app/src/main/res/layout/activity_main.xml" value="0.21145833333333333" />
+        <entry key="app/src/main/res/layout/activity_main.xml" value="0.19" />
         <entry key="app/src/main/res/layout/activity_maps.xml" value="0.21145833333333333" />
         <entry key="app/src/main/res/layout/activity_maps2.xml" value="0.1203125" />
         <entry key="app/src/main/res/layout/activity_welcome.xml" value="0.18" />
@@ -27,6 +28,7 @@
         <entry key="app/src/main/res/layout/item_forecast.xml" value="0.21145833333333333" />
         <entry key="app/src/main/res/layout/item_locations.xml" value="0.21145833333333333" />
         <entry key="app/src/main/res/layout/navbar_main.xml" value="0.21145833333333333" />
+        <entry key="app/src/main/res/menu/bottom_menu.xml" value="0.13355263157894737" />
       </map>
     </option>
   </component>

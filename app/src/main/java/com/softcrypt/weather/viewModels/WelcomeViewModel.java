@@ -1,5 +1,6 @@
 package com.softcrypt.weather.viewModels;
 
+import android.net.wifi.WifiConfiguration;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.View;
@@ -49,7 +50,6 @@ import io.realm.Realm;
 public class WelcomeViewModel extends AndroidViewModel {
 
     private final LocationDatabaseRepository locationDatabaseRepository;
-    private final CompositeDisposable disposable = new CompositeDisposable();
     private MutableLiveData<List<String>> result = new MutableLiveData<>();
     private MutableLiveData<String> progressResult = new MutableLiveData<>();
 
