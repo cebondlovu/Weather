@@ -35,12 +35,6 @@ public class ForecastFrag extends Fragment {
     }
 
     @Override
-    public void onDestroy() {
-        super.onDestroy();
-
-    }
-
-    @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,Bundle savedInstanceState) {
         View itemView = inflater.inflate(R.layout.fragment_forecast, container, false);
 

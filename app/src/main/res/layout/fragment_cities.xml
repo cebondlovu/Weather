@@ -14,19 +14,15 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent">
-        <androidx.appcompat.widget.Toolbar
+        <com.mancj.materialsearchbar.MaterialSearchBar
+            android:id="@+id/searchBar"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:id="@+id/toolbar">
-            <com.mancj.materialsearchbar.MaterialSearchBar
-                android:id="@+id/searchBar"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                style="@style/AppMaterialTheme.MaterialSearchBarDark"
-                app:mt_speechMode="false"
-                app:mt_placeholderColor="@color/colorSubText"
-                app:mt_placeholder="City Name"/>
-        </androidx.appcompat.widget.Toolbar>
+            android:layout_gravity="center"
+            style="@style/AppMaterialTheme.MaterialSearchBarDark"
+            app:mt_placeholder="City Name"
+            app:mt_placeholderColor="@color/colorSubText"
+            app:mt_speechMode="false" />
     </com.google.android.material.appbar.AppBarLayout>
         <LinearLayout
             android:id="@+id/weather_panel"
