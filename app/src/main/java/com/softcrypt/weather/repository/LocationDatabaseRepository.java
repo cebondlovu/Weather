@@ -5,11 +5,14 @@ import android.content.Context;
 import com.softcrypt.weather.base.BaseApplication;
 import com.softcrypt.weather.database.LocationsDatabaseHelper;
 import com.softcrypt.weather.models.ItemLocation;
+import com.softcrypt.weather.models.LocalCity;
 
 import java.util.ArrayList;
 
 import javax.inject.Inject;
 
+import io.reactivex.Completable;
+import io.reactivex.Flowable;
 import io.realm.Realm;
 
 public class LocationDatabaseRepository {
@@ -29,6 +32,10 @@ public class LocationDatabaseRepository {
         locationsDatabaseHelper.insertLocation(itemLocation);
     }
 
+    public void modelInsertLocalLocation(LocalCity localCity){
+        locationsDatabaseHelper.insertLocalData(localCity);
+    }
+
     public void modelDeleteLocation(String uniqueId) {
         locationsDatabaseHelper.deleteLocation(uniqueId);
     }
@@ -39,6 +46,10 @@ public class LocationDatabaseRepository {
 
     public ArrayList modelGetAllLocations() {
         return locationsDatabaseHelper.getAllLocations();
+    }
+
+    public ArrayList modelGetAllLocalLocations() {
+        return locationsDatabaseHelper.getAllLocalLocations();
     }
 
     public ItemLocation modelGetLocation(String name) {

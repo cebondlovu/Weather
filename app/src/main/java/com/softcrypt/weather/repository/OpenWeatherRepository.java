@@ -16,6 +16,9 @@ public class OpenWeatherRepository {
     @Inject
     public OpenWeatherRepository(IOpenWeatherAPI iOpenWeatherAPI) {this.iOpenWeatherAPI = iOpenWeatherAPI;}
 
+    public OpenWeatherRepository() {
+    }
+
     public Single<WeatherResult> modelGetWeatherByCityName(String cityName, String appid, String unit){
         return iOpenWeatherAPI.getWeatherByCityName(cityName, appid, unit);
     }

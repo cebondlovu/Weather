@@ -43,6 +43,7 @@ import com.softcrypt.weather.views.fragments.ForecastFrag;
 import com.softcrypt.weather.views.fragments.TodayWeatherFrag;
 import com.softcrypt.weather.R;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.inject.Inject;
@@ -54,6 +55,8 @@ public class MainActivity extends AppCompatActivity {
     private Toolbar toolbar;
     private TabLayout tabLayout;
     private ViewPager viewPager;
+    public static String GLOBAL_LIST = "gList";
+    public static List<String> list;
 
     @Inject
     ViewModelProvider.Factory viewModelFactory;
@@ -93,7 +96,7 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onPause() {
         super.onPause();
-        mainViewModel.clearDisposable();
+        //mainViewModel.clearDisposable();
     }
 
     @Override
@@ -145,6 +148,9 @@ public class MainActivity extends AppCompatActivity {
                                 .show();
                     }
                 }).check();
+
+        list = new ArrayList<>();
+        list = Common.globalCityList;
     }
 
     private void getNetworkProviderState() {

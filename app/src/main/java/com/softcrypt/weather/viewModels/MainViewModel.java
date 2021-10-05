@@ -3,6 +3,8 @@ package com.softcrypt.weather.viewModels;
 import android.app.Application;
 import android.content.Context;
 
+import androidx.annotation.NonNull;
+import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
@@ -42,12 +44,6 @@ public class MainViewModel extends ViewModel {
         this.openWeatherRepository = openWeatherRepository;
     }
 
-    public MutableLiveData<WeatherResult> getCityModelMutableLivData(String cityName, String appid,
-                                                                     String unit) {
-        getWeatherByCity(cityName,appid,unit);
-        return modelCityMutableLivData;
-    }
-
     public MutableLiveData<WeatherResult> getLatLngModelMutableLivData(String lat,String lng,
                                                                      String appid,String unit) {
         getWeatherByLatLng(lat,lng,appid,unit);
@@ -58,6 +54,12 @@ public class MainViewModel extends ViewModel {
                                                                                String appid, String unit) {
         getWeatherByForecast(lat,lng,appid,unit);
         return modelForecastMutableLivData;
+    }
+
+    public LiveData<WeatherResult> getCityModelMutableLivData(String cityName, String appid,
+                                                              String unit) {
+        getWeatherByCity(cityName,appid,unit);
+        return modelCityMutableLivData;
     }
 
     private void getWeatherByForecast(String lat, String lng, String appid, String unit) {
@@ -100,15 +102,15 @@ public class MainViewModel extends ViewModel {
         disposable.add(openWeatherRepository.modelGetWeatherByCityName(cityName, appid, unit)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribeWith(new DisposableSingleObserver<WeatherResult>(){
+                .subscribeWith(new DisposableSingleObserver<WeatherResult>() {
 
                     @Override
-                    public void onSuccess(WeatherResult weatherResult) {
+                    public void onSuccess(@NonNull WeatherResult weatherResult) {
                         modelCityMutableLivData.setValue(weatherResult);
                     }
 
                     @Override
-                    public void onError(Throwable e) {
+                    public void onError(@NonNull Throwable e) {
 
                     }
                 }));

@@ -123,7 +123,7 @@ public class ViewPopup extends AppCompatActivity implements FileChooserDialog.Fi
                 }));
 
         cancel = dialog.findViewById(R.id.btn_cancel_dg);
-        cancel.setOnClickListener(view -> dialog.hide());
+        cancel.setOnClickListener(view -> {dialog.hide(); finish();});
 
         dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
         dialog.show();

@@ -6,6 +6,7 @@ import com.softcrypt.weather.views.LocationsActivity;
 import com.softcrypt.weather.views.MainActivity;
 import com.softcrypt.weather.views.MapsActivity;
 import com.softcrypt.weather.views.ViewPopup;
+import com.softcrypt.weather.views.WelcomeAct;
 
 import javax.inject.Singleton;
 
@@ -19,5 +20,6 @@ public interface AppComponent {
     void injectMapsAct(MapsActivity mapsActivity);
     void injectLocationsAct(LocationsActivity locationsActivity);
     void injectViewPopup(ViewPopup viewPopup);
+    void injectWelcomeAct(WelcomeAct welcomeAct);
 
 }

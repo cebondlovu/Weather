@@ -4,9 +4,12 @@ import android.app.Dialog;
 import android.os.Environment;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
+
 import com.afollestad.materialdialogs.MaterialDialog;
 import com.softcrypt.weather.base.BaseApplication;
 import com.softcrypt.weather.models.ItemLocation;
+import com.softcrypt.weather.models.LocalCity;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -14,6 +17,13 @@ import java.io.FileOutputStream;
 import java.util.ArrayList;
 import java.util.Objects;
 
+import io.reactivex.BackpressureStrategy;
+import io.reactivex.Completable;
+import io.reactivex.CompletableEmitter;
+import io.reactivex.CompletableOnSubscribe;
+import io.reactivex.Flowable;
+import io.reactivex.FlowableEmitter;
+import io.reactivex.FlowableOnSubscribe;
 import io.realm.Realm;
 import io.realm.internal.IOException;
 
@@ -37,6 +47,13 @@ public class LocationsDatabaseHelper {
             return 0;
     }
 
+    public int getNextLocalLocationKey() {
+        if (realm.where(LocalCity.class).count() > 0)
+            return Objects.requireNonNull(realm.where(LocalCity.class).max("id")).intValue() + 1;
+        else
+            return 0;
+    }
+
     public int getLocationsCount() {
         return (int) realm.where(ItemLocation.class).count();
     }
@@ -52,6 +69,18 @@ public class LocationsDatabaseHelper {
             itemLocationData.setName(itemLocation.getName());
             itemLocationData.setLat(itemLocation.getLat());
             itemLocationData.setLng(itemLocation.getLng());
+            realm.commitTransaction();
+        }
+    }
+
+    public void insertLocalData(LocalCity localCity) {
+        LocalCity modal = realm.where(LocalCity.class)
+                .equalTo("name", localCity.getName())
+                .findFirst();
+        if (modal == null) {
+            realm.beginTransaction();
+            LocalCity localLocation = realm.createObject(LocalCity.class, getNextLocalLocationKey());
+            localLocation.setName(localCity.getName());
             realm.commitTransaction();
         }
     }
@@ -79,6 +108,10 @@ public class LocationsDatabaseHelper {
 
     public ArrayList getAllLocations(){
         return new ArrayList(realm.where(ItemLocation.class).findAll());
+    }
+
+    public ArrayList getAllLocalLocations() {
+        return new ArrayList(realm.where(LocalCity.class).findAll());
     }
 
     public ItemLocation getLocation(String name) {

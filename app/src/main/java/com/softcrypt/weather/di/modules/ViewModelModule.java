@@ -9,6 +9,7 @@ import com.softcrypt.weather.viewModels.MainViewModel;
 import com.softcrypt.weather.viewModels.MapsViewModel;
 import com.softcrypt.weather.viewModels.ViewModelFactory;
 import com.softcrypt.weather.viewModels.ViewPopupViewModel;
+import com.softcrypt.weather.viewModels.WelcomeViewModel;
 
 import dagger.Binds;
 import dagger.Module;

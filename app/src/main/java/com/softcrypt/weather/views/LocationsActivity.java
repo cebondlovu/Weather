@@ -36,23 +36,11 @@ public class LocationsActivity extends AppCompatActivity {
     private LocationsViewModel locationsViewModel;
 
     @Override
-    protected void onStart() {
-        super.onStart();
-        locationsViewModel =   new LocationsViewModel((BaseApplication) this.getApplication(), Realm.getDefaultInstance());
-    }
-
-    @Override
     protected void onResume() {
         locationsViewModel =   new LocationsViewModel((BaseApplication) this.getApplication(), Realm.getDefaultInstance());
         getLocations();
         showProcedure();
         super.onResume();
-    }
-
-    @Override
-    protected void onPause() {
-        super.onPause();
-        locationsViewModel.clearDisposable();
     }
 
     @Override

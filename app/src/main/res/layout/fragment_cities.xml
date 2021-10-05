@@ -82,7 +82,6 @@
                 android:text="Weather In Brynston, JB"
                 android:textColor="@color/colorSubText"
                 android:textSize="16sp"/>
-
             <TableLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -207,11 +206,7 @@
                 </TableRow>
 
             </TableLayout>
-
-
-
         </LinearLayout>
-
         <ProgressBar
             android:id="@+id/progress"
             android:layout_width="wrap_content"
@@ -221,4 +216,21 @@
             android:visibility="visible"
             android:layout_gravity="center_horizontal" />
     </FrameLayout>
+
+    <Button
+        android:id="@+id/add_location"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="80dp"
+        android:layout_marginEnd="80dp"
+        android:layout_marginBottom="16dp"
+        android:layout_gravity="bottom|center_vertical"
+        android:background="@drawable/blue_button"
+        android:text="@string/add_location"
+        android:textColor="@color/colorTitle"
+        android:textSize="16sp"
+        android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
 </androidx.constraintlayout.widget.ConstraintLayout>

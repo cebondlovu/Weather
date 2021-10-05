@@ -13,4 +13,5 @@
     <string name="weather_updates">Weather Updates</string>
     <string name="weather_app">Weather App</string>
     <string name="logo">logo</string>
+    <string name="add_location">Add Location</string>
 </resources>
